@@ -8,6 +8,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private GameObject[] tilePrefabs;
 
+    [SerializeField]
+    private CameraMovement cameraMovement;
+
+    public Dictionary<Point,TileScript> Tiles { get; set; }
+
+
     public float TileSize//property to get size of tiles
     {
         get{return tilePrefabs[0].GetComponent<SpriteRenderer>().sprite.bounds.size.x;}
@@ -20,12 +26,15 @@ public class LevelManager : MonoBehaviour
 
     private void CreateLevel()
     {
+        Tiles = new Dictionary<Point, TileScript>();
+
         string[] mapData=ReadLevelText();
 
         //calculate x , then y
         int mapX = mapData[0].ToCharArray().Length;
         int mapY = mapData.Length;
-        
+
+        Vector3 maxTile = Vector3.zero;
         
         //calculates corner of screen
         Vector3 worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
@@ -36,21 +45,25 @@ public class LevelManager : MonoBehaviour
 
             for (int x = 0; x < mapX; x++)//x position
             {
-                PlaceTile(newTiles[x].ToString(),x,y,worldStart);
+               PlaceTile(newTiles[x].ToString(),x,y,worldStart);
             }
         }
+        maxTile = Tiles[new Point(mapX - 1, mapY - 1)].transform.position;
+        cameraMovement.SetLimits(new Vector3(maxTile.x+TileSize,maxTile.y-TileSize));
     }
 
-    private void PlaceTile(string tileType,int x, int y,Vector3 worldStart)
+    private void PlaceTile(string tileType, int x, int y, Vector3 worldStart)
     {   //"1"=1
         int tileIndex = int.Parse(tileType);
 
         //new tile + reference to that tile in newTile
-        GameObject newTile = Instantiate(tilePrefabs[tileIndex]);
+        TileScript newTile = Instantiate(tilePrefabs[tileIndex]).GetComponent<TileScript>();
 
-        //uses the new tile variable to change the position of the tile
-        newTile.transform.position = new Vector3(worldStart.x+(TileSize * x), worldStart.y-(TileSize * y), 0);
+        newTile.Setup(new Point(x, y),new Vector3(worldStart.x + (TileSize * x), worldStart.y - (TileSize * y), 0));
+
+        Tiles.Add(new Point(x, y),newTile);
     }
+
 
     private string[] ReadLevelText()
     {
