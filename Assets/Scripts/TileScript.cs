@@ -6,11 +6,20 @@ public class TileScript : MonoBehaviour
 {
     public Point GridPosition { get; private set; }
 
-
-
-    public void Setup(Point gridPos,Vector3 worldPos)
+    public Vector2 WorldPosition
     {
-        this.GridPosition = GridPosition;
-        transform.position= worldPos;
+        get 
+        {
+            return new Vector2(transform.position.x+(GetComponent<SpriteRenderer>().bounds.size.x/2),transform.position.y-(GetComponent<SpriteRenderer>().bounds.size.y/2));
+        }
+    }
+
+    public void Setup(Point gridPos, Vector3 worldPos)
+    {
+        this.GridPosition = gridPos;
+        transform.position = worldPos;
+
+        LevelManager.Instance.Tiles.Add(gridPos, this);
+
     }
 }
