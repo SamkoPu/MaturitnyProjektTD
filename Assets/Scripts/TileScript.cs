@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class TileScript : MonoBehaviour
@@ -8,18 +9,35 @@ public class TileScript : MonoBehaviour
 
     public Vector2 WorldPosition
     {
-        get 
+        get
         {
-            return new Vector2(transform.position.x+(GetComponent<SpriteRenderer>().bounds.size.x/2),transform.position.y-(GetComponent<SpriteRenderer>().bounds.size.y/2));
+            return new Vector2(transform.position.x + (GetComponent<SpriteRenderer>().bounds.size.x / 2), transform.position.y - (GetComponent<SpriteRenderer>().bounds.size.y / 2));
         }
     }
 
-    public void Setup(Point gridPos, Vector3 worldPos,Transform parent)
+    public void Setup(Point gridPos, Vector3 worldPos, Transform parent)
     {
         this.GridPosition = gridPos;
         transform.position = worldPos;
-        transform.SetParent(parent); 
+        transform.SetParent(parent);
         LevelManager.Instance.Tiles.Add(gridPos, this);
 
     }
+
+    private void OnMouseOver()
+    {
+
+        if (Input.GetMouseButton(0))
+        {
+            PlaceTower();
+        }
+
+    }
+
+    private void PlaceTower()
+    {
+        Instantiate(GameManager.Instance.TowerPrefab, transform.position, (quaternion.identity));
+    }
+
+
 }
