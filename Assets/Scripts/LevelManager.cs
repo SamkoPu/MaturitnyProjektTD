@@ -10,6 +10,10 @@ public class LevelManager : Singleton<LevelManager>
 
     [SerializeField]
     private CameraMovement cameraMovement;
+    
+    [SerializeField] 
+    private Transform map;
+
 
     private Point blueSpawn,redSpawn;
 
@@ -66,7 +70,7 @@ public class LevelManager : Singleton<LevelManager>
         //new tile + reference to that tile in newTile
         TileScript newTile = Instantiate(tilePrefabs[tileIndex]).GetComponent<TileScript>();
 
-        newTile.Setup(new Point(x, y),new Vector3(worldStart.x + (TileSize * x), worldStart.y - (TileSize * y), 0));
+        newTile.Setup(new Point(x, y),new Vector3(worldStart.x + (TileSize * x), worldStart.y - (TileSize * y), 0),map);
     }
 
 
