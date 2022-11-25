@@ -3,9 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
-{//docasne
-    [SerializeField]
-    private GameObject towerPrefab;
+{
+    public TowerBTN ClickedBtn { get; set; }
 
-    public GameObject TowerPrefab { get => towerPrefab; }
+    private void Update()
+    {
+        HandleEscape();
+    }
+    public void PickTower(TowerBTN towerBTN)
+    {
+        this.ClickedBtn = towerBTN;
+        Hower.Instance.Activate(towerBTN.Sprite);
+    }
+
+    public void BuyTower()
+    {
+        Hower.Instance.DeActivate();
+    }
+
+    private void HandleEscape()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Hower.Instance.DeActivate();
+        }
+    }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9038279869854330991}
   - component: {fileID: 9038279869854330990}
   m_Layer: 0
-  m_Name: IceTower
+  m_Name: FrostTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
