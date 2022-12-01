@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class TileScript : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer SpriteRenderer { get; set; }
+    public bool Debugging { get; set; }
     public Point GridPosition { get; private set; }
 
     public bool IsEmpty { get; private set; }
@@ -24,7 +25,7 @@ public class TileScript : MonoBehaviour
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void Setup(Point gridPos, Vector3 worldPos, Transform parent)
@@ -41,11 +42,11 @@ public class TileScript : MonoBehaviour
     {
         if (!EventSystem.current.IsPointerOverGameObject() && GameManager.Instance.ClickedBtn != null)
         {
-            if (IsEmpty)
+            if (IsEmpty&&Debugging==false)
             {
                 ColorTIle(emptyColor);
             }
-            if (!IsEmpty)
+            if (!IsEmpty && Debugging == false)
             {
                 ColorTIle(fullColor);
             }
@@ -57,7 +58,10 @@ public class TileScript : MonoBehaviour
     }
     private void OnMouseExit()
     {
-        ColorTIle(Color.white);
+        if (Debugging == false)
+        {
+            ColorTIle(Color.white);
+        }
     }
 
 
@@ -77,7 +81,7 @@ public class TileScript : MonoBehaviour
 
     private void ColorTIle(Color32 newColor)
     {
-        spriteRenderer.color = newColor;
+        SpriteRenderer.color = newColor;
 
     }
 
