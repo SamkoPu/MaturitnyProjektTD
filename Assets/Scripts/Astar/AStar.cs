@@ -21,6 +21,23 @@ public static class AStar
         {
             CreateNodes();
         }
+        HashSet<Node> openList= new HashSet<Node>();
+
+        Node currentNode = nodes[start];
+
+        openList.Add(currentNode);
+
+        for (int x = -1; x < 1; x++)
+        {
+            for (int y = -1; y < 1; y++)
+            {
+                Point neighbourPos = new Point(currentNode.GridPosition.X - x, currentNode.GridPosition.Y - y);
+                Debug.Log(neighbourPos.X + " " + neighbourPos.Y);
+            }
+        }
+
+        //only for debug , remove later!!
+        GameObject.Find("AStarDebugger").GetComponent<AStarDebugger>().DebugPath(openList);
     }
 
 

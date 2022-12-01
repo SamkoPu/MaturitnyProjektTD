@@ -40,8 +40,7 @@ public class AStarDebugger : MonoBehaviour
                     {
                         start = tmp;
                         start.SpriteRenderer.sprite = blankTile;
-                        start.SpriteRenderer.color = new Color32(255, 132, 0, 255);
-                        start.Debugging = true;
+                        start.SpriteRenderer.color = Color.green;
                     }
                     else if (goal==null)
                     {
@@ -54,6 +53,15 @@ public class AStarDebugger : MonoBehaviour
 
             }
 
+        }
+    }
+
+    public void DebugPath(HashSet<Node> openList)
+    {
+        foreach (Node node in openList)
+        {
+            node.TileRef.SpriteRenderer.color = Color.cyan;
+            node.TileRef.SpriteRenderer.sprite = blankTile;
         }
     }
 }
