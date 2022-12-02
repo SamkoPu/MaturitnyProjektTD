@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class TileScript : MonoBehaviour
 {
-    public SpriteRenderer SpriteRenderer { get; set; }
+    private SpriteRenderer spriteRenderer;
+    public bool WalkAble { get; set; }
     public bool Debugging { get; set; }
     public Point GridPosition { get; private set; }
 
@@ -25,11 +26,12 @@ public class TileScript : MonoBehaviour
 
     private void Start()
     {
-        SpriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void Setup(Point gridPos, Vector3 worldPos, Transform parent)
     {
+        WalkAble = true;
         IsEmpty = true;
         this.GridPosition = gridPos;
         transform.position = worldPos;
@@ -77,11 +79,12 @@ public class TileScript : MonoBehaviour
 
         GameManager.Instance.BuyTower();
 
+        WalkAble = false;
     }
 
     private void ColorTIle(Color32 newColor)
     {
-        SpriteRenderer.color = newColor;
+        spriteRenderer.color = newColor;
 
     }
 

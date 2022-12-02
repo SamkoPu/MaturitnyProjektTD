@@ -123,6 +123,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &118293162
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 487714145625249778, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6069149778459248635, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6248001103098768330, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
+      propertyPath: m_Name
+      value: DebuggingTile
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
 --- !u!1 &465010748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1262,6 +1323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blankTile: {fileID: 21300000, guid: 24e0eacb551f5394eb721a806b4d4533, type: 3}
+  arrowPrefab: {fileID: 205701509823185521, guid: 5218a1d0d6912274d815016de02d126e, type: 3}
+  debugTilePrefab: {fileID: 6248001103098768330, guid: 824d9bb3c7979934a8970b8a24b5fdce, type: 3}
 --- !u!4 &1503737004
 Transform:
   m_ObjectHideFlags: 0

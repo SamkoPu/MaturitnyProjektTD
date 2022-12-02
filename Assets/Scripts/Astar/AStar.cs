@@ -22,22 +22,32 @@ public static class AStar
             CreateNodes();
         }
         HashSet<Node> openList= new HashSet<Node>();
-
+        HashSet<Node> closeList = new HashSet<Node>();
         Node currentNode = nodes[start];
 
         openList.Add(currentNode);
 
-        for (int x = -1; x < 1; x++)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int y = -1; y < 1; y++)
+            for (int y = -1; y <= 1; y++)
             {
                 Point neighbourPos = new Point(currentNode.GridPosition.X - x, currentNode.GridPosition.Y - y);
-                Debug.Log(neighbourPos.X + " " + neighbourPos.Y);
+                if (LevelManager.Instance.InBounds(neighbourPos) && LevelManager.Instance.Tiles[neighbourPos].WalkAble && neighbourPos != currentNode.GridPosition)
+                {
+                    Node neighbour = nodes[neighbourPos];
+                    if (!openList.Contains(neighbour))
+                    {
+                        openList.Add(neighbour);
+                    }
+                    neighbour.CalcValues(currentNode);
+                }   
             }
         }
+        openList.Remove(currentNode);
+        closeList.Add(currentNode);
 
         //only for debug , remove later!!
-        GameObject.Find("AStarDebugger").GetComponent<AStarDebugger>().DebugPath(openList);
+        GameObject.Find("AStarDebugger").GetComponent<AStarDebugger>().DebugPath(openList,closeList);
     }
 
 
