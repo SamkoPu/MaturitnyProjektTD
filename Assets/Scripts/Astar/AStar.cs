@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public static class AStar 
@@ -15,40 +18,105 @@ public static class AStar
         }
     }
 
-    public static void GetPath(Point start)
+    public static void GetPath(Point start, Point goal)
     {
-        if (nodes==null)
+        if (nodes == null)
         {
             CreateNodes();
         }
-        HashSet<Node> openList= new HashSet<Node>();
+        HashSet<Node> openList = new HashSet<Node>();
         HashSet<Node> closeList = new HashSet<Node>();
+
+        Stack<Node> finalPath = new Stack<Node>();
+
         Node currentNode = nodes[start];
 
         openList.Add(currentNode);
 
-        for (int x = -1; x <= 1; x++)
+        while (openList.Count > 0)
         {
-            for (int y = -1; y <= 1; y++)
+            for (int x = -1; x <= 1; x++)
             {
-                Point neighbourPos = new Point(currentNode.GridPosition.X - x, currentNode.GridPosition.Y - y);
-                if (LevelManager.Instance.InBounds(neighbourPos) && LevelManager.Instance.Tiles[neighbourPos].WalkAble && neighbourPos != currentNode.GridPosition)
+                for (int y = -1; y <= 1; y++)
                 {
-                    Node neighbour = nodes[neighbourPos];
-                    if (!openList.Contains(neighbour))
+                    Point neighbourPos = new Point(currentNode.GridPosition.X - x, currentNode.GridPosition.Y - y);
+                    if (LevelManager.Instance.InBounds(neighbourPos) && LevelManager.Instance.Tiles[neighbourPos].WalkAble && neighbourPos != currentNode.GridPosition)
                     {
-                        openList.Add(neighbour);
+                        int gCost = 0;
+
+                        if (Math.Abs(x - y) == 1)
+                        {
+                            gCost = 10;
+                        }
+                        else
+                        {
+                            if (!ConnectedDiagonally(currentNode, nodes[neighbourPos]))
+                            {
+                                continue;
+                            }
+                            gCost = 14;
+                        }
+
+                        Node neighbour = nodes[neighbourPos];
+
+                        if (openList.Contains(neighbour))
+                        {
+                            if (currentNode.G + gCost < neighbour.G)
+                            {
+                                neighbour.CalcValues(currentNode, nodes[goal], gCost);
+                            }
+                        }
+
+                        else if (!closeList.Contains(neighbour))
+                        {
+                            openList.Add(neighbour);
+                            neighbour.CalcValues(currentNode, nodes[goal], gCost);
+                        }
+
                     }
-                    neighbour.CalcValues(currentNode);
-                }   
+                }
+
+            }
+            openList.Remove(currentNode);
+            closeList.Add(currentNode);
+
+            if (openList.Count > 0)
+            {
+                currentNode = openList.OrderBy(n => n.F).First();
+            }
+
+            if (currentNode == nodes[goal])
+            {
+                while (currentNode.GridPosition != start)
+                {
+                    finalPath.Push(currentNode);
+                    currentNode = currentNode.Parent;
+                }
+                break;
             }
         }
-        openList.Remove(currentNode);
-        closeList.Add(currentNode);
 
         //only for debug , remove later!!
-        GameObject.Find("AStarDebugger").GetComponent<AStarDebugger>().DebugPath(openList,closeList);
-    }
+        GameObject.Find("AStarDebugger").GetComponent<AStarDebugger>().DebugPath(openList, closeList, finalPath);
 
+        
+    }
+    private static bool ConnectedDiagonally(Node currentNode,Node neighbour)
+    {
+        Point direction = neighbour.GridPosition - currentNode.GridPosition;
+
+        Point first = new Point(currentNode.GridPosition.X + direction.X, currentNode.GridPosition.Y);
+        Point second = new Point(currentNode.GridPosition.X, currentNode.GridPosition.Y + direction.Y);
+
+        if (LevelManager.Instance.InBounds(first) && !LevelManager.Instance.Tiles[first].WalkAble)
+        {
+            return false;
+        }
+        if (LevelManager.Instance.InBounds(second) && !LevelManager.Instance.Tiles[second].WalkAble)
+        {
+            return false;
+        }
+        return true;
+    }
 
 }

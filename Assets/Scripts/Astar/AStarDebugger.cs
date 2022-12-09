@@ -26,7 +26,7 @@ public class AStarDebugger : MonoBehaviour
         ClickTile();
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AStar.GetPath(start.GridPosition);
+            AStar.GetPath(start.GridPosition,goal.GridPosition);
         }
     }
 
@@ -59,24 +59,34 @@ public class AStarDebugger : MonoBehaviour
         }
     }
 
-    public void DebugPath(HashSet<Node> openList,HashSet<Node> closeList)
+    public void DebugPath(HashSet<Node> openList,HashSet<Node> closeList, Stack<Node> path)
     {
         foreach (Node node in openList)
         {
-            if (node.TileRef != start)
+            if (node.TileRef != start && node.TileRef != goal)
             {
-                CreateDebugTile(node.TileRef.WorldPosition, Color.cyan);
+                CreateDebugTile(node.TileRef.WorldPosition, Color.cyan,node);
             }
             PointToParent(node, node.TileRef.WorldPosition);
         }
 
         foreach (Node node in closeList)
         {
-            if (node.TileRef != start&&node.TileRef!=goal)
+            if (node.TileRef != start&&node.TileRef!=goal&&!path.Contains(node))
             {
-                CreateDebugTile(node.TileRef.WorldPosition, Color.blue);
+                CreateDebugTile(node.TileRef.WorldPosition, Color.blue,node);
+            }
+            PointToParent(node, node.TileRef.WorldPosition);
+        }
+
+        foreach (Node node in path)
+        {
+            if (node.TileRef != start && node.TileRef != goal)
+            {
+                CreateDebugTile(node.TileRef.WorldPosition, Color.green, node);
             }
         }
+
     }
 
     private void PointToParent(Node node, Vector2 position)
@@ -133,9 +143,19 @@ public class AStarDebugger : MonoBehaviour
 
         }
     }
-    private void CreateDebugTile(Vector3 worldPos,Color32 color)
+    private void CreateDebugTile(Vector3 worldPos,Color32 color,Node node=null)
     {
         GameObject debugTile = (GameObject)Instantiate(debugTilePrefab, worldPos, Quaternion.identity);
+
+        if (node != null)
+        {
+            DebugTile tmp = debugTile.GetComponent<DebugTile>();
+
+            tmp.G.text += node.G;
+            tmp.H.text += node.H;
+            tmp.F.text+=node.F;
+        }
+
         debugTile.GetComponent<SpriteRenderer>().color = color;
     }
 }
