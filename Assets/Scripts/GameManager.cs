@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class GameManager : Singleton<GameManager>
     private int currency;
     [SerializeField]
     private Text currencyText;
-
+    public ObjectPool Pool { get; set; }
     public int Currency
     {
         get { return currency; }
@@ -21,6 +22,12 @@ public class GameManager : Singleton<GameManager>
         }
 
     }
+
+    private void Awake()
+    {
+            Pool=GetComponent<ObjectPool>();
+    }
+
     private void Start()
     {
         Currency = 5;
@@ -56,5 +63,40 @@ public class GameManager : Singleton<GameManager>
         {
             Hower.Instance.DeActivate();
         }
+    }
+
+    public void StartWave()
+    {
+        StartCoroutine(SpawnWave());
+    }
+
+    private IEnumerator SpawnWave()
+    {
+        LevelManager.Instance.GeneratePath();
+        int monsterIndex = Random.Range(0, 4);
+
+        string type = string.Empty;
+
+        switch (monsterIndex)
+        {
+            case 0:
+                type = "BlueMonster";
+                break;
+            case 1:
+                type = "RedMonster";
+                break;
+            case 2:
+                type = "GreenMonster";
+                break;
+            case 3:
+                type = "PurpleMonster";
+                break;
+        }
+
+        Monster monster=Pool.GetObject(type).GetComponent<Monster>();
+        monster.Spawn();
+
+
+        yield return new WaitForSeconds(2.5f);
     }
 }
