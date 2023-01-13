@@ -8,6 +8,8 @@ public class Monster : MonoBehaviour
     private float speed;
     private Stack<Node> path;
 
+    private Animator myAnimator;
+
     public Point GridPosition { get; set; }
 
     private Vector3 destination;
@@ -25,14 +27,15 @@ public class Monster : MonoBehaviour
     {
         transform.position = LevelManager.Instance.BluePortal.transform.position;
 
-        StartCoroutine(Scale(new Vector3(0.1f, 0.1f), new Vector3(1, 1)));
+        myAnimator=GetComponent<Animator>();
+
+        StartCoroutine(Scale(new Vector3(0.1f, 0.1f), new Vector3(1, 1),false));
 
         SetPath(LevelManager.Instance.Path);
     }
 
-    public IEnumerator Scale(Vector3 from, Vector3 to)
+    public IEnumerator Scale(Vector3 from, Vector3 to,bool remove)
     {
-        IsActive = false;
 
         float progress = 0;
         while (progress<=1)
@@ -45,6 +48,11 @@ public class Monster : MonoBehaviour
 
         transform.localScale = to;
         IsActive = true;
+
+        if (remove)
+        {
+            Release();
+        }
     }
 
     private void Move()
@@ -57,6 +65,8 @@ public class Monster : MonoBehaviour
             {
                 if (path != null && path.Count > 0)
                 {
+                    Animate(GridPosition, path.Peek().GridPosition);
+
                     GridPosition = path.Peek().GridPosition;
                     destination = path.Pop().WorldPosition;
                 }
@@ -70,8 +80,60 @@ public class Monster : MonoBehaviour
         {
             this.path = newPath;
 
+            Animate(GridPosition, path.Peek().GridPosition);
+
             GridPosition = path.Peek().GridPosition;
             destination = path.Pop().WorldPosition;
         }
     }
+
+    private void Animate(Point currentPos, Point newPos)
+    {
+        if (currentPos.Y>newPos.Y)
+        {
+            //move down vertical horizontal
+            myAnimator.SetInteger("horizontal", 0);
+            myAnimator.SetInteger("vertical", 1);
+        }
+        else if (currentPos.Y<newPos.Y)
+        {
+            //move up
+            myAnimator.SetInteger("horizontal", 0);
+            myAnimator.SetInteger("vertical", -1);
+
+        }
+        if (currentPos.Y==newPos.Y)
+        {
+            if (currentPos.X>newPos.X)
+            {
+                //move left
+                myAnimator.SetInteger("horizontal", -1);
+                myAnimator.SetInteger("vertical", 0);
+            }
+            else if (currentPos.X<newPos.X)
+            {
+                //move right
+                myAnimator.SetInteger("horizontal", 1);
+                myAnimator.SetInteger("vertical", 0);
+            }
+
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag=="RedPortal")
+        {
+            StartCoroutine(Scale(new Vector3(1, 1), new Vector3(0.1f, 0.1f),true));
+            other.GetComponent<Portal>().Open(); 
+        }
+    } 
+
+    private void Release()
+    {
+        IsActive = false;
+        GridPosition = LevelManager.Instance.BlueSpawn;
+        GameManager.Instance.Pool.ReleaseObject(gameObject);
+    }
+
+
 }
