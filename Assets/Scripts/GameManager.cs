@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
@@ -10,6 +12,38 @@ public class GameManager : Singleton<GameManager>
 
     private int currency;
     private int wave = 0;
+
+    private int lives;
+    [SerializeField]
+    private Text livesTxt;
+
+
+    public int Lives
+    {
+        get { return lives; }
+        set 
+        {
+            this.lives = value;
+            if (lives <= 0)
+            {
+                this.lives = 0;
+                GameOver();
+            }
+            livesTxt.text = lives.ToString();
+        }
+    }
+
+    private bool gameOver = false;
+    [SerializeField]
+    private GameObject gameOverMenu;
+    [SerializeField]
+    private GameObject upgradePanel;
+    [SerializeField]
+    private Text sellText;
+
+    private Tower selectedTower;
+
+
     [SerializeField]
     private Text waveTxt;
     
@@ -34,7 +68,7 @@ public class GameManager : Singleton<GameManager>
         }
 
     }
-
+    private int health=15;
     private void Awake()
     {
             Pool=GetComponent<ObjectPool>();
@@ -42,6 +76,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        Lives = 10;
         Currency = 5;
     }
 
@@ -67,6 +102,29 @@ public class GameManager : Singleton<GameManager>
             Currency -= ClickedBtn.Price;
             Hower.Instance.DeActivate();
         }
+    }
+
+    public void SelectTower(Tower tower)
+    {
+        if (selectedTower !=null)
+        {
+            selectedTower.Select();
+        }
+        selectedTower = tower;
+        selectedTower.Select();
+
+        sellText.text = "+ " + (selectedTower.Price / 2).ToString();
+        upgradePanel.SetActive(true);
+    }
+
+    public void DeselectTower()
+    {
+        if (selectedTower!=null)
+        {
+            selectedTower.Select();
+        }
+        upgradePanel.SetActive(false);
+        selectedTower = null;
     }
 
     private void HandleEscape()
@@ -115,7 +173,13 @@ public class GameManager : Singleton<GameManager>
             }
 
             Monster monster = Pool.GetObject(type).GetComponent<Monster>();
-            monster.Spawn();
+            monster.Spawn(health);
+
+            if (wave%3==0)
+            {
+                health += 5;
+            }
+
             activeMonsters.Add(monster);
 
             yield return new WaitForSeconds(2.5f);
@@ -125,9 +189,40 @@ public class GameManager : Singleton<GameManager>
     {
         activeMonsters.Remove(monster);
 
-        if (!WaveActive)
+        if (!WaveActive&&!gameOver)
         {
             waveBtn.SetActive(true);
+        }
+    }
+
+    public void GameOver()
+    {
+        if (!gameOver)
+        {
+            gameOver = true;
+            gameOverMenu.SetActive(true);
+        }
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void SellTower()
+    {
+        if (selectedTower!=null)
+        {
+            Currency += selectedTower.Price / 2;
+            selectedTower.GetComponentInParent<TileScript>().IsEmpty = true;
+            Destroy(selectedTower.transform.parent.gameObject);
+            DeselectTower();
         }
     }
 }
