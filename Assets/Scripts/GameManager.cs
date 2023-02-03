@@ -195,6 +195,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    
     public void GameOver()
     {
         if (!gameOver)
@@ -221,6 +222,7 @@ public class GameManager : Singleton<GameManager>
         {
             Currency += selectedTower.Price / 2;
             selectedTower.GetComponentInParent<TileScript>().IsEmpty = true;
+            selectedTower.GetComponentInParent<TileScript>().WalkAble = true;
             Destroy(selectedTower.transform.parent.gameObject);
             DeselectTower();
         }

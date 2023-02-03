@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 2790754992704684195, guid: 2e7e024421abfb04faf9a55937348612, type: 3}
   sprite: {fileID: 21300000, guid: acf5c282c5b844749bd04b1e20fae892, type: 3}
-  price: 0
+  price: 2
   priceText: {fileID: 1639813937}
 --- !u!1 &532021874
 GameObject:
@@ -3279,7 +3279,7 @@ GameObject:
   - component: {fileID: 1698135152}
   - component: {fileID: 1698135155}
   - component: {fileID: 1698135154}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: WaveTxt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
