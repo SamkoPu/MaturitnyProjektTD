@@ -26,7 +26,7 @@ public abstract class Tower : MonoBehaviour
         get { return target; }
     }
 
-    
+
     [SerializeField]
     private int damage;
     [SerializeField]
@@ -52,7 +52,7 @@ public abstract class Tower : MonoBehaviour
     void Awake()
     {
         mySpriteRenderer = GetComponent<SpriteRenderer>();
-        myAnimator= transform.parent.GetComponent<Animator>();
+        myAnimator = transform.parent.GetComponent<Animator>();
     }
     private void Update()
     {
@@ -68,32 +68,32 @@ public abstract class Tower : MonoBehaviour
         if (!canAttack)
         {
             attackTimer += Time.deltaTime;
-            if (attackTimer>=attackCooldown)
+            if (attackTimer >= attackCooldown)
             {
                 canAttack = true;
                 attackTimer = 0;
             }
         }
-        if (target==null&&monsters.Count>0)
+        if (target == null && monsters.Count > 0)
         {
             target = monsters.Dequeue();
         }
-        if (target !=null&& target.IsActive)
+        if (target != null && target.IsActive)
         {
             if (canAttack)
             {
                 Shoot();
 
                 myAnimator.SetTrigger("Attack");
-                
+
                 canAttack = false;
             }
         }
-        else if (monsters.Count>0)
+        else if (monsters.Count > 0)
         {
             target = monsters.Dequeue();
         }
-        if (target!=null&&!target.Alive)
+        if (target != null && !target.Alive || target!=null&&!target.IsActive)
         {
             target = null;
         }

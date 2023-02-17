@@ -120,6 +120,7 @@ MonoBehaviour:
   debuffDuration: 5
   proc: 100
   attackCooldown: 3
+  slowingFactor: 50
 --- !u!1 &9038279869854330989
 GameObject:
   m_ObjectHideFlags: 0

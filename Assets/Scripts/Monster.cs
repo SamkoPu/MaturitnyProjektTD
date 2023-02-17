@@ -31,12 +31,17 @@ public class Monster : MonoBehaviour
     private Vector3 destination;
 
     public bool IsActive { get; set; }
+
+    public float MaxSpeed { get; set; }
+
     public Element ElementType { get => elementType;}
+    public float Speed { get => speed; set => speed = value; }
 
     private void Awake()
     {
         myAnimator = GetComponent<Animator>();
         spriteRenderer=GetComponent<SpriteRenderer>();
+        MaxSpeed = speed;
         health.Initialize();
     }
     private void Update()
@@ -86,7 +91,7 @@ public class Monster : MonoBehaviour
     {
         if (IsActive)
         {
-            transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, destination, Speed * Time.deltaTime);
 
             if (transform.position == destination)
             {
@@ -162,6 +167,7 @@ public class Monster : MonoBehaviour
 
     public void Release()
     {
+        debuffs.Clear();
         IsActive = false;
         GridPosition = LevelManager.Instance.BlueSpawn;
         GameManager.Instance.Pool.ReleaseObject(gameObject);

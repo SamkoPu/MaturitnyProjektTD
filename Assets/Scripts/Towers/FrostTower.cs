@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class FrostTower : Tower
 {
+    [SerializeField]
+    private float slowingFactor;
+
+
     private void Start()
     {
         ElementType = Element.FROST;
     }
     public override Debuff getDebuff()
     {
-        return new FrostDebuff(Target);
+        return new FrostDebuff(slowingFactor, DebuffDuration, Target) ;
     }
 }

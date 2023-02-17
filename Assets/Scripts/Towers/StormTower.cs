@@ -10,6 +10,6 @@ public class StormTower : Tower
     }
     public override Debuff getDebuff()
     {
-        return new StormDebuff(Target);
+        return new StormDebuff(Target,DebuffDuration);
     }
 }
