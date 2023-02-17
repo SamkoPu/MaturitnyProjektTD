@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public enum Element { STORM,FIRE,FROST,POISON,NONE}
+
+public abstract class Tower : MonoBehaviour
 {
     [SerializeField]
     private string projectileType;
@@ -27,8 +29,16 @@ public class Tower : MonoBehaviour
     
     [SerializeField]
     private int damage;
+    [SerializeField]
+    private float debuffDuration;
+
+    [SerializeField]
+    private float proc;
+    public Element ElementType { get; protected set; }
     public int Price { get; set; }
     public int Damage { get => damage; }
+    public float DebuffDuration { get => debuffDuration; set => debuffDuration = value; }
+    public float Proc { get => proc; set => proc = value; }
 
     private Queue<Monster> monsters = new Queue<Monster>();
 
@@ -102,6 +112,8 @@ public class Tower : MonoBehaviour
             monsters.Enqueue(other.GetComponent<Monster>());    
         }
     }
+
+    public abstract Debuff getDebuff();
 
     public void OnTriggerExit2D(Collider2D other)
     {

@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
+  elementType: 1
   health:
     bar: {fileID: 6491246638383960218}
     maxVal: 0
