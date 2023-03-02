@@ -6,8 +6,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+public delegate void CurrencyChanged();
+
 public class GameManager : Singleton<GameManager>
 {
+    public event CurrencyChanged Changed;
+
     public TowerBTN ClickedBtn { get; set; }
 
     private int currency;
@@ -39,7 +44,14 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private GameObject upgradePanel;
     [SerializeField]
+    private GameObject statsPanel;
+
+    [SerializeField]
     private Text sellText;
+
+    [SerializeField]
+    private Text statText;
+
 
     private Tower selectedTower;
 
@@ -65,6 +77,9 @@ public class GameManager : Singleton<GameManager>
         { 
             this.currency = value; 
             this.currencyText.text = value.ToString() + "<color=lime>€</color>";
+
+            OnCurrencyChanged();
+
         }
 
     }
@@ -101,6 +116,14 @@ public class GameManager : Singleton<GameManager>
         {
             Currency -= ClickedBtn.Price;
             Hower.Instance.DeActivate();
+        }
+    }
+
+    public void OnCurrencyChanged()
+    {
+        if (Changed!=null)
+        {
+            Changed();
         }
     }
 
@@ -225,6 +248,31 @@ public class GameManager : Singleton<GameManager>
             selectedTower.GetComponentInParent<TileScript>().WalkAble = true;
             Destroy(selectedTower.transform.parent.gameObject);
             DeselectTower();
+        }
+
+    }
+
+    public void ShowStats()
+    {
+        statsPanel.SetActive(!statsPanel.activeSelf);
+    }
+    public void SetTooltipText(string txt)
+    {
+        statText.text = txt;
+        
+    }
+
+    public void ShowSelectedTowerStats()
+    {
+        statsPanel.SetActive(!statsPanel.activeSelf);
+        UpdateUpgradeTooltip();
+    }
+
+    public void UpdateUpgradeTooltip()
+    {
+        if (selectedTower!=null)
+        {
+            SetTooltipText(selectedTower.GetStats());
         }
     }
 }

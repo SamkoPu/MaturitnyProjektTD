@@ -21,6 +21,10 @@ public abstract class Tower : MonoBehaviour
     private SpriteRenderer mySpriteRenderer;
 
     private Monster target;
+
+    public int Level { get; protected set;}
+
+
     public Monster Target
     {
         get { return target; }
@@ -47,6 +51,8 @@ public abstract class Tower : MonoBehaviour
     [SerializeField]
     private float attackCooldown;
 
+    public TowerUpgrade[] Upgrades { get; protected set; }
+
 
 
     void Awake()
@@ -62,6 +68,7 @@ public abstract class Tower : MonoBehaviour
     public void Select()
     {
         mySpriteRenderer.enabled = !mySpriteRenderer.enabled;
+
     }
     private void Attack()
     {
@@ -74,7 +81,7 @@ public abstract class Tower : MonoBehaviour
                 attackTimer = 0;
             }
         }
-        if (target == null && monsters.Count > 0)
+        if (target == null && monsters.Count > 0 && monsters.Peek().IsActive)
         {
             target = monsters.Dequeue();
         }
@@ -89,14 +96,15 @@ public abstract class Tower : MonoBehaviour
                 canAttack = false;
             }
         }
-        else if (monsters.Count > 0)
-        {
-            target = monsters.Dequeue();
-        }
         if (target != null && !target.Alive || target!=null&&!target.IsActive)
         {
             target = null;
         }
+    }
+
+    public virtual string GetStats()
+    {
+        return string.Format("\nLevel: {0}\nDamage: {1}\nProc: {2}%\nDebuff: {3}sec",Level,damage,proc,DebuffDuration);
     }
     private void Shoot()
     {
