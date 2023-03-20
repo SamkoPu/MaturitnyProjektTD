@@ -275,4 +275,15 @@ public class GameManager : Singleton<GameManager>
             SetTooltipText(selectedTower.GetStats());
         }
     }
+
+    public void UpgradeTower()
+    {
+        if (selectedTower!=null)
+        {
+            if (selectedTower.Level<=selectedTower.Upgrades.Length&&currency>=selectedTower.NextUpgrade.Price)
+            {
+                selectedTower.Upgrade();
+            }
+        }
+    }
 }

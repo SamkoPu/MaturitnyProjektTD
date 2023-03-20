@@ -44,7 +44,24 @@ public abstract class Tower : MonoBehaviour
     public float DebuffDuration { get => debuffDuration; set => debuffDuration = value; }
     public float Proc { get => proc; set => proc = value; }
 
+
+    public TowerUpgrade NextUpgrade
+    {
+    get
+        {
+            if (Upgrades.Length>Level-1)
+            {
+                return Upgrades[Level - 1];
+            }
+            return null;
+        }
+    }
+
+
     private Queue<Monster> monsters = new Queue<Monster>();
+
+
+
 
     private bool canAttack = true;
     private float attackTimer;
@@ -59,6 +76,7 @@ public abstract class Tower : MonoBehaviour
     {
         mySpriteRenderer = GetComponent<SpriteRenderer>();
         myAnimator = transform.parent.GetComponent<Animator>();
+        Level = 1;
     }
     private void Update()
     {
@@ -104,14 +122,32 @@ public abstract class Tower : MonoBehaviour
 
     public virtual string GetStats()
     {
-        return string.Format("\nLevel: {0}\nDamage: {1}\nProc: {2}%\nDebuff: {3}sec",Level,damage,proc,DebuffDuration);
+        if (NextUpgrade != null)
+        {
+            return string.Format("\nLevel: {0} \nDamage: {1} <color=#00ff00ff> +{4}</color>\nProc: {2}% <color=#00ff00ff>+{5}%</color>\nDebuff: {3}sec <color=#00ff00ff>+{6}</color>", Level, damage, proc, DebuffDuration, NextUpgrade.Damage, NextUpgrade.ProcChance, NextUpgrade.DebuffDuration);
+        }
+
+        return string.Format("\nLevel: {0} \nDamage: {1} \nProc: {2}% \nDebuff: {3}sec", Level, damage, proc, DebuffDuration);
     }
+
     private void Shoot()
     {
         Projectile projectile = GameManager.Instance.Pool.GetObject(projectileType).GetComponent<Projectile>();
         projectile.transform.position = transform.position;
         projectile.Initialize(this);
     }
+
+    public virtual void Upgrade()
+    {
+        GameManager.Instance.Currency -= NextUpgrade.Price;
+        Price += NextUpgrade.Price;
+        this.damage += NextUpgrade.Damage;
+        this.proc += NextUpgrade.ProcChance;
+        this.DebuffDuration += NextUpgrade.DebuffDuration;
+        Level++;
+        GameManager.Instance.UpdateUpgradeTooltip();
+    }
+
 
     public void OnTriggerEnter2D(Collider2D other)
     {

@@ -30,6 +30,15 @@ public class PoisonTower : Tower
     {
         return new PoisonDebuff(splashDamage, TickTime,splashPrefab,DebuffDuration,Target) ;
     }
+    public override string GetStats()
+    {
+        if (NextUpgrade != null)
+        {
+            return string.Format("<color=#00ff00ff>{0}</color>{1} \nTick time: {2} <color=#00ff00ff>{4}</color>\nSplash damage: {3} <color=#00ff00ff>+{5}</color>", "<size=20><b>Poison</b></size>", base.GetStats(), TickTime, SplashDamage, NextUpgrade.TickTime, NextUpgrade.SpecialDamage);
+        }
 
+        return string.Format("<color=#00ff00ff>{0}</color>{1} \nTick time: {2}\nSplash damage: {3}", "<size=20><b>Poison</b></size>", base.GetStats(), TickTime, SplashDamage);
+
+    }
 }
 
